@@ -1,9 +1,9 @@
 var config = {
   dialect: "mysql",
-  database: "lbs_mini",
-  username: "root",
-  password: "Ssq03230202",
-  host: "129.204.218.96:3306",
+  database: "lbsmini",
+  username: "app_user",
+  password: "lbs_mini",
+  host: "129.204.241.109:3306",
   port: 3306,
   http: 8080,
   cors: {
