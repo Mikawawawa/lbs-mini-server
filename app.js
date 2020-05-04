@@ -63,7 +63,7 @@ app.post("/upload", upload.single("images"), (req, res) => {
   // }
   res.json({
     success: true,
-    data: [{ url: "http://192.168.0.105:8080/images/" + req.file.filename }],
+    data: [{ url: `${config.bind}/images/${req.file.filename}` }],
   });
 });
 

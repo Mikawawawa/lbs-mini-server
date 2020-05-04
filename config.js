@@ -1,4 +1,5 @@
 var config = {
+  bind: "http://129.204.241.109:8080",
   dialect: "mysql",
   database: "lbsmini",
   username: "app_user",
