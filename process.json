@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name": "lbs-mini",
+      "script": "npm start",
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "watch": false,
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "cwd": "/home/ubuntu/lbs-mini-server/"
+    }
+  ]
+}
