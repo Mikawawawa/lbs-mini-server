@@ -13,9 +13,9 @@ const indexRouter = require("./router");
 const wechatRouter = require("./wechat");
 
 const app = express();
-
+const config = require("./config");
 app.use(compression());
-app.use(cors(require("./config").cors));
+app.use(cors(config.cors));
 app.set("trust proxy", 2); // trust first proxy
 
 app.use(logger("tiny"));
