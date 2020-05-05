@@ -24,8 +24,8 @@ var config = {
     ],
   },
   redisTick: 10,
-  AppId: "wxdc1a92bb01bfd8bb",
-  AppSecret: "e685d81fadcf3600be650159cf89316f",
+  AppId: "wx04062e3334ae342a",
+  AppSecret: "23c5d0cc3d56dab1e9cb30ee2b487d12",
 };
 
 module.exports = config;
