@@ -16,17 +16,25 @@ User.init(
     nickname: Sequelize.STRING(100),
     mobile: Sequelize.STRING(100),
     token: Sequelize.STRING(100),
+    idnumber: {
+      type: Sequelize.INTEGER(),
+    },
   },
   { sequelize, modelName: "User" }
 );
 
-exports.create = (uuid, nickname, avatar, token) => {
-  return User.create({
+User.sync({
+  alter: true,
+});
+
+exports.create = async (uuid, nickname, avatar, token) => {
+  return await User.create({
     uuid,
     nickname,
     avatar,
     mobile: "",
     token,
+    idnumber: (await User.max("idnumber")) + 1,
   });
   // .then(res => console.log(res.dataValues))
   // .catch(e => console.log(e.sqlMessage, e.sqlState));
