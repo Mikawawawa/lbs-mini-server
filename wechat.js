@@ -63,12 +63,15 @@ router.post("/login", async (req, res, next) => {
     // console.info("用户已经存在");
     console.info("Exist login", theUser.dataValues.token);
     // req.session.user = theUser.dataValues;
-    return res.send(theUser.dataValues.token);
+    return res.send({
+      token: theUser.dataValues.token,
+      idnumber: theUser.dataValues.idnumber,
+    });
   } else {
     const token = createToken();
-    await User.create(data.openid, nickname, avatar, token);
+    const newUser = await User.create(data.openid, nickname, avatar, token);
     // req.session.user = newUser.dataValues;
-    return res.send(token);
+    return res.json({ token, idnumber: newUser.dataValues.idnumber });
   }
 });
 
