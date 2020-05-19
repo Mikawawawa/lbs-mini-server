@@ -39,7 +39,9 @@ exports.add = async (userKey, msgId) => {
 // TODO后期优化可以做个分页，现在用不到
 exports.get = async (userKey, type = undefined) => {
   const user = await User.model.findOne({ where: { token: userKey } });
-  const query = {};
+  const query = {
+    disable: false,
+  };
   if (type !== undefined) {
     query.picked = type;
   }
@@ -55,6 +57,7 @@ exports.get = async (userKey, type = undefined) => {
 };
 
 exports.disable = (id) => {
+  console.log(id);
   return Mailbox.update(
     {
       disable: true,

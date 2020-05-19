@@ -160,9 +160,10 @@ router.post("/mailbox/dele", async (req, res) => {
   try {
     res.json({
       success: true,
-      data: await Mailbox.disable(req.body.code),
+      data: await Mailbox.disable(req.body.id),
     });
   } catch (error) {
+    console.log(error);
     res.json({
       success: false,
     });
