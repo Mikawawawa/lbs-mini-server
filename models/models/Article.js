@@ -21,6 +21,7 @@ Article.init(
     images: Sequelize.TEXT(),
     dele: Sequelize.BOOLEAN(),
     checked: Sequelize.BOOLEAN(),
+    private: { type: Sequelize.BOOLEAN(), defaultValue: false },
   },
   { sequelize, modelName: "Article" }
 );
@@ -41,7 +42,7 @@ exports.search = (lng, lat) => {
   });
 };
 
-exports.create = async (user, raw, lat, lng, images) => {
+exports.create = async (user, raw, lat, lng, images, private = false) => {
   const theUser = await User.model.findOne({ where: { token: user } });
   const code = Util.hash(raw + lat + lng + user);
   const theArticle = await Article.create({
@@ -51,8 +52,9 @@ exports.create = async (user, raw, lat, lng, images) => {
     images,
     code,
     dele: false,
-    checked: true,
+    checked: false,
     id: Util.uuid(),
+    private,
   });
 
   await theUser.addArticle(theArticle);
@@ -65,6 +67,45 @@ exports.getAll = async (user) => {
     order: [["createdAt", "DESC"]],
     where: { dele: false },
   });
+};
+
+exports.list = async (pages = 1, count = 20) => {
+  return Promise.all(
+    await Article.findAll({
+      offset: (pages - 1) * count,
+      limit: count,
+      order: [["createdAt", "DESC"]],
+    }).map(async (item) => ({
+      ...item.dataValues,
+      user: (
+        await User.model.findOne({
+          where: { uuid: item.dataValues.UserUuid },
+        })
+      ).dataValues,
+    }))
+  );
+};
+
+exports.check = (id) => {
+  return Article.update(
+    {
+      checked: true,
+    },
+    {
+      where: { id },
+    }
+  );
+};
+
+exports.uncheck = (id) => {
+  return Article.update(
+    {
+      checked: false,
+    },
+    {
+      where: { id },
+    }
+  );
 };
 
 exports.model = Article;

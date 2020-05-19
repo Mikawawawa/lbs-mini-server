@@ -69,6 +69,8 @@ app.post("/upload", upload.single("images"), (req, res) => {
 
 app.use("/", indexRouter);
 app.use("/wechat", wechatRouter);
+app.use("/system", require("./routers/system"));
+app.use("/manager", require("./routers/manager"));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

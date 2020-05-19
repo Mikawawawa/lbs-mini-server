@@ -2,20 +2,39 @@ const express = require("express");
 const router = express.Router();
 const Sequelize = require("sequelize");
 
-const { Article, User } = require("./models");
+const { Article, User, Mailbox } = require("./models");
 
 router.post("/post/write", async (req, res) => {
   try {
-    res.json({
-      success: true,
-      data: await Article.create(
+    console.log(req.body.secret);
+    if (req.body.secret === true) {
+      const theArticle = await Article.create(
         req.body.key,
         req.body.raw,
         req.body.lat,
         req.body.lng,
-        JSON.stringify(req.body.images)
-      ),
-    });
+        JSON.stringify(req.body.images),
+        true
+      );
+      res.json({
+        success: true,
+        data: await Mailbox.add(
+          req.body.targetUser.key,
+          theArticle.dataValues.code
+        ),
+      });
+    } else {
+      res.json({
+        success: true,
+        data: await Article.create(
+          req.body.key,
+          req.body.raw,
+          req.body.lat,
+          req.body.lng,
+          JSON.stringify(req.body.images)
+        ),
+      });
+    }
   } catch (error) {
     console.log(error);
     res.json({
@@ -66,6 +85,84 @@ router.get("/post/all", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    res.json({
+      success: false,
+    });
+  }
+});
+
+router.post("/mailbox/add", async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      data: await Mailbox.add(req.body.key, req.body.msgId),
+    });
+  } catch (error) {
+    console.log("e");
+    res.json({
+      success: false,
+    });
+  }
+});
+
+router.get("/mailbox/list", async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      data:
+        req.query.type === "0"
+          ? await Mailbox.get(req.query.key)
+          : await Mailbox.get(req.query.key, req.query.type === "2"),
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+    });
+  }
+});
+
+router.get("/user/check", async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      data: await User.model.findOne({ where: { idnumber: req.query.number } }),
+    });
+  } catch (error) {
+    res.json({ success: false });
+  }
+});
+
+router.post("/mailbox/push", async (req, res) => {
+  try {
+    const theMessage = await Article.create(
+      req.body.key,
+      req.body.raw,
+      req.body.lat,
+      req.body.lng,
+      JSON.stringify(req.body.images),
+      true
+    );
+
+    res.json({
+      success: true,
+      data: await Mailbox.add(req.body.target, theMessage.dataValues.id),
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+    });
+  }
+});
+
+router.post("/mailbox/dele", async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      data: await Mailbox.disable(req.body.code),
+    });
+  } catch (error) {
     res.json({
       success: false,
     });

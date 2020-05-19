@@ -23,10 +23,6 @@ User.init(
   { sequelize, modelName: "User" }
 );
 
-User.sync({
-  alter: true,
-});
-
 exports.create = async (uuid, nickname, avatar, token) => {
   return await User.create({
     uuid,
@@ -34,7 +30,7 @@ exports.create = async (uuid, nickname, avatar, token) => {
     avatar,
     mobile: "",
     token,
-    idnumber: (await User.max("idnumber")) + 1,
+    idnumber: (await User.max("idnumber")) || 10000 + 1,
   });
   // .then(res => console.log(res.dataValues))
   // .catch(e => console.log(e.sqlMessage, e.sqlState));

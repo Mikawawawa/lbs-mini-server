@@ -7,6 +7,7 @@ const qs = require("querystring");
 const config = require("./config");
 
 const User = require("./models/models/User");
+const Range = require("./models/models/Range");
 
 function createToken() {
   const chars =
@@ -31,6 +32,8 @@ router.post("/login", async (req, res, next) => {
   var nickname = req.body.nickName;
   var avatar = req.body.avatar;
   var code = req.body.code;
+  const lat = req.body.lat || 0;
+  const lng = req.body.lng || 0;
   const query = qs.encode({
     grant_type: "authorization_code",
     appid: config.AppId,
@@ -53,11 +56,15 @@ router.post("/login", async (req, res, next) => {
     );
   });
   // console.log(data);
-  const theUser = await User.model.findOne({
-    where: {
-      uuid: data.openid,
-    },
-  });
+  const [theUser, theRange] = await Promise.all([
+    User.model.findOne({
+      where: {
+        uuid: data.openid,
+      },
+    }),
+    Range.check(lat, lng),
+  ]);
+  console.log(theRange);
 
   if (theUser !== null && theUser.dataValues !== {}) {
     // console.info("用户已经存在");
@@ -66,6 +73,7 @@ router.post("/login", async (req, res, next) => {
     return res.send({
       token: theUser.dataValues.token,
       idnumber: theUser.dataValues.idnumber,
+      accessable: theRange,
     });
   } else {
     const token = createToken();
