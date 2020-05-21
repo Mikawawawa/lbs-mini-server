@@ -170,4 +170,27 @@ router.post("/mailbox/dele", async (req, res) => {
   }
 });
 
+router.get("/share", async (req, res) => {
+  try {
+    const theArticle = await Article.model.findOne({
+      where: { code: req.query.code },
+    });
+
+    const theUser = await theArticle.getUser();
+
+    res.json({
+      success: true,
+      data: {
+        raw: theArticle.dataValues,
+        user: theUser.dataValues,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+    });
+  }
+});
+
 module.exports = router;
