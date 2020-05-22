@@ -37,6 +37,7 @@ exports.search = (lng, lat) => {
         [Sequelize.Op.between]: lat,
       },
       dele: false,
+      checked: true,
     },
     order: [["createdAt", "DESC"]],
   });
@@ -65,7 +66,7 @@ exports.getAll = async (user) => {
   const theUser = await User.model.findOne({ where: { token: user } });
   return await theUser.getArticles({
     order: [["createdAt", "DESC"]],
-    where: { dele: false },
+    where: { dele: false, checked: true },
   });
 };
 
