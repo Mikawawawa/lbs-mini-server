@@ -1,5 +1,5 @@
 var config = {
-  bind: "http://129.204.241.109:8080",
+  bind: "https://wechat.theohan.club",
   dialect: "mysql",
   database: "lbsmini",
   username: "app_user",
@@ -12,7 +12,7 @@ var config = {
     exposedHeaders: ["Content-Disposition"],
     origin: [
       // "http://192.168.0.103:3000",
-      "http://jianyangfan.cn",
+      // "http://jianyangfan.cn",
       /\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3}/,
       /\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3}:8080/,
       /\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3}:3000/,
