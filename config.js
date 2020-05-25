@@ -13,6 +13,10 @@ var config = {
     origin: [
       // "http://192.168.0.103:3000",
       // "http://jianyangfan.cn",
+      "https://share.theohan.club",
+      "https://admin.theohan.club",
+      "http://share.theohan.club",
+      "http://admin.theohan.club",
       /\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3}/,
       /\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3}:8080/,
       /\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3}:3000/,
