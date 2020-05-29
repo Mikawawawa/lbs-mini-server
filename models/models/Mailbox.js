@@ -45,15 +45,16 @@ exports.get = async (userKey, type = undefined) => {
   if (type !== undefined) {
     query.picked = type;
   }
-  console.log(query);
-  return await Promise.all(
-    (await user.getMailboxes({ where: query })).map(async (item) => {
-      return {
-        box: item.dataValues,
-        article: (await item.getArticles())[0],
-      };
-    })
-  );
+  return (
+    await Promise.all(
+      (await user.getMailboxes({ where: query })).map(async (item) => {
+        return {
+          box: item.dataValues,
+          article: (await item.getArticles())[0],
+        };
+      })
+    )
+  ).filter((item) => item.article && item.article.checked === true);
 };
 
 exports.disable = (id) => {
