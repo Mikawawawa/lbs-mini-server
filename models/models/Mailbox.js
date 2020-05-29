@@ -48,7 +48,6 @@ exports.get = async (userKey, type = undefined) => {
   console.log(query);
   return await Promise.all(
     (await user.getMailboxes({ where: query })).map(async (item) => {
-      console.log(item);
       return {
         box: item.dataValues,
         article: (await item.getArticles())[0],
