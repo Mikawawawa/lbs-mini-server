@@ -77,7 +77,8 @@ exports.create = async (user, raw, lat, lng, type, images, private = false) => {
 };
 
 exports.getAll = async (user, needCheck = true) => {
-  const query = needCheck ? { dele: false, checked: true } : { dele: false };
+  const query =
+    needCheck === true ? { dele: false, checked: true } : { dele: false };
   const theUser = await User.model.findOne({ where: { token: user } });
   return await theUser.getArticles({
     order: [["createdAt", "DESC"]],
@@ -94,11 +95,12 @@ exports.list = async (pages = 1, count = 20) => {
     }).map(async (item) => {
       return {
         ...item.dataValues,
-        user: (
-          (await User.model.findOne({
-            where: { uuid: item.dataValues.UserUuid },
-          })) || {}
-        ).dataValues,
+        nickname:
+          (
+            (await User.model.findOne({
+              where: { uuid: item.dataValues.UserUuid },
+            })) || { dataValues: {} }
+          ).dataValues.nickname || "",
       };
     })
   );

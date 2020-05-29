@@ -55,6 +55,15 @@ router.post("/activity/disable", async (req, res) => {
 
 router.post("/activity/set_checked", async (req, res) => {
   await Article.setCheckedImg(req.body.id, req.body.url);
+
+  const data =
+    ((await Article.model.findOne({ where: { id: req.body.id } })) || {})
+      .dataValues || {};
+  if (data.lat !== null && data.lng !== null) {
+    await Article.check(req.body.id);
+  }
+
+  console.log(data);
   res.json({
     success: true,
   });

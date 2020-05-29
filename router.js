@@ -83,7 +83,7 @@ router.get("/post/all", async (req, res) => {
   try {
     res.json({
       success: true,
-      data: await Article.getAll(req.query.key),
+      data: await Article.getAll(req.query.key, req.query.needCheck || true),
     });
   } catch (error) {
     console.log(error);
