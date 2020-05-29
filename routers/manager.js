@@ -52,4 +52,24 @@ router.post("/activity/disable", async (req, res) => {
     });
   }
 });
+
+router.post("/activity/set_checked", async (req, res) => {
+  await Article.setCheckedImg(req.body.id, req.body.url);
+  res.json({
+    success: true,
+  });
+});
+
+router.post("/activity/relocate", async (req, res) => {
+  try {
+    await Article.relocate(req.body.id, req.body.lat, req.body.lng);
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+    });
+  }
+});
 module.exports = router;

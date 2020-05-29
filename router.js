@@ -13,6 +13,7 @@ router.post("/post/write", async (req, res) => {
         req.body.raw,
         req.body.lat,
         req.body.lng,
+        req.body.type,
         JSON.stringify(req.body.images),
         true
       );
@@ -31,6 +32,7 @@ router.post("/post/write", async (req, res) => {
           req.body.raw,
           req.body.lat,
           req.body.lng,
+          req.body.type,
           JSON.stringify(req.body.images)
         ),
       });

@@ -31,7 +31,9 @@ const init = async () => {
   // model.Article.model.sync({
   //   alter: true,
   // });
-  await link.sync();
+  await link.sync({
+    // alter: true,
+  });
   console.log("[ORM]", "Sync db ok.");
 };
 

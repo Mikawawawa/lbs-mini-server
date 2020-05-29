@@ -18,13 +18,25 @@ Article.init(
     code: Sequelize.STRING(100),
     lat: Sequelize.DOUBLE(),
     lng: Sequelize.DOUBLE(),
+    // 用户上传图片
     images: Sequelize.TEXT(),
+    // 是否已删除
     dele: Sequelize.BOOLEAN(),
+    // 受否通过审核
     checked: Sequelize.BOOLEAN(),
     private: { type: Sequelize.BOOLEAN(), defaultValue: false },
+    // 运营图片地址
+    checkedImg: Sequelize.STRING(),
+    // 动态类型[AIM定向,NORMAL普通,RANDOM随机]
+    type: Sequelize.STRING(),
   },
   { sequelize, modelName: "Article" }
 );
+
+// 在修改模型后开启，仅开发阶段开启，开启一次后关闭
+// Article.sync({
+//   alter: true,
+// });
 
 exports.search = (lng, lat) => {
   console.log(lng, lat);
@@ -43,13 +55,15 @@ exports.search = (lng, lat) => {
   });
 };
 
-exports.create = async (user, raw, lat, lng, images, private = false) => {
+exports.create = async (user, raw, lat, lng, type, images, private = false) => {
+  console.log(type, images);
   const theUser = await User.model.findOne({ where: { token: user } });
   const code = Util.hash(raw + lat + lng + user);
   const theArticle = await Article.create({
     raw,
     lat,
     lng,
+    type,
     images,
     code,
     dele: false,
@@ -62,11 +76,12 @@ exports.create = async (user, raw, lat, lng, images, private = false) => {
   return theArticle;
 };
 
-exports.getAll = async (user) => {
+exports.getAll = async (user, needCheck = true) => {
+  const query = needCheck ? { dele: false, checked: true } : { dele: false };
   const theUser = await User.model.findOne({ where: { token: user } });
   return await theUser.getArticles({
     order: [["createdAt", "DESC"]],
-    where: { dele: false, checked: true },
+    where: query,
   });
 };
 
@@ -76,14 +91,16 @@ exports.list = async (pages = 1, count = 20) => {
       offset: (pages - 1) * count,
       limit: count,
       order: [["createdAt", "DESC"]],
-    }).map(async (item) => ({
-      ...item.dataValues,
-      user: (
-        await User.model.findOne({
-          where: { uuid: item.dataValues.UserUuid },
-        })
-      ).dataValues,
-    }))
+    }).map(async (item) => {
+      return {
+        ...item.dataValues,
+        user: (
+          (await User.model.findOne({
+            where: { uuid: item.dataValues.UserUuid },
+          })) || {}
+        ).dataValues,
+      };
+    })
   );
 };
 
@@ -107,6 +124,21 @@ exports.uncheck = (id) => {
       where: { id },
     }
   );
+};
+
+exports.setCheckedImg = (id, src) => {
+  return Article.update(
+    {
+      checkedImg: src,
+    },
+    {
+      where: { id },
+    }
+  );
+};
+
+exports.relocate = (id, lat, lng) => {
+  return Article.update({ lat, lng }, { where: { id } });
 };
 
 exports.model = Article;
