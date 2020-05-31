@@ -34,7 +34,7 @@ const init = async () => {
   await link.sync({
     // alter: true,
   });
-  console.log("[ORM]", "Sync db ok.");
+  console.log("[ORM]", "Sync db ok!");
 };
 
 init();
