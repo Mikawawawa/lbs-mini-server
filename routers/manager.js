@@ -69,6 +69,17 @@ router.post("/activity/set_checked", async (req, res) => {
   });
 });
 
+router.post("/activity/setBackCover", async (req, res) => {
+  try {
+    await Article.setBackCover(req.body.id, req.body.url);
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    res.json({ success: false });
+  }
+});
+
 router.post("/activity/relocate", async (req, res) => {
   try {
     await Article.relocate(req.body.id, req.body.lat, req.body.lng);
@@ -81,4 +92,41 @@ router.post("/activity/relocate", async (req, res) => {
     });
   }
 });
+
+router.post("/activity/dele", async (req, res) => {
+  try {
+    await Article.model.update(
+      { dele: true },
+      {
+        where: { id: req.body.id },
+      }
+    );
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+    });
+  }
+});
+
+router.post("/activity/recover", async (req, res) => {
+  try {
+    await Article.model.update(
+      { dele: false },
+      {
+        where: { id: req.body.id },
+      }
+    );
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+    });
+  }
+});
+
 module.exports = router;

@@ -27,6 +27,8 @@ Article.init(
     private: { type: Sequelize.BOOLEAN(), defaultValue: false },
     // 运营图片地址
     checkedImg: Sequelize.STRING(),
+    // 封底
+    backCover: Sequelize.STRING(),
     // 动态类型[AIM定向,NORMAL普通,RANDOM随机]
     type: Sequelize.STRING(),
   },
@@ -132,6 +134,17 @@ exports.setCheckedImg = (id, src) => {
   return Article.update(
     {
       checkedImg: src,
+    },
+    {
+      where: { id },
+    }
+  );
+};
+
+exports.setBackCover = (id, src) => {
+  return Article.update(
+    {
+      backCover: src,
     },
     {
       where: { id },
