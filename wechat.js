@@ -64,22 +64,27 @@ router.post("/login", async (req, res, next) => {
     }),
     Range.check(lat, lng),
   ]);
-  console.log(theRange);
+  const ToastText = require("./config").ToastText;
 
   if (theUser !== null && theUser.dataValues !== {}) {
     // console.info("用户已经存在");
     console.info("Exist login", theUser.dataValues.token);
     // req.session.user = theUser.dataValues;
-    return res.send({
+    return res.json({
       token: theUser.dataValues.token,
       idnumber: theUser.dataValues.idnumber,
       accessable: theRange,
+      ToastText,
     });
   } else {
     const token = createToken();
     const newUser = await User.create(data.openid, nickname, avatar, token);
     // req.session.user = newUser.dataValues;
-    return res.json({ token, idnumber: newUser.dataValues.idnumber });
+    return res.json({
+      token,
+      idnumber: newUser.dataValues.idnumber,
+      ToastText,
+    });
   }
 });
 

@@ -62,4 +62,49 @@ router.post("/ranges/remove", async (req, res) => {
   }
 });
 
+router.post("/config/update", async (req, res) => {
+  try {
+    console.log(req.body);
+    require("fs").writeFileSync(
+      require("path").resolve(__dirname, "../config.js"),
+      require("prettier").format(
+        `
+      var config = ${JSON.stringify(
+        { ...require("../config"), ...req.body },
+        null,
+        2
+      )}
+
+      module.exports = config
+    `,
+        { semi: false, parser: "babel" }
+      )
+    );
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+    });
+  }
+});
+
+router.get("/config/get", async (req, res) => {
+  try {
+    const { cors, redisTick, ...config } = require("../config");
+    console.log(req.body);
+    res.json({
+      success: true,
+      data: config,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+    });
+  }
+});
+
 module.exports = router;

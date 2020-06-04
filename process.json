@@ -4,7 +4,8 @@
       "name": "lbs-mini",
       "script": "npm start",
       "log_date_format": "YYYY-MM-DD HH:mm Z",
-      "watch": false,
+      "watch": true,
+      "ignoreWatch": ["public"],
       "env": {
         "NODE_ENV": "production"
       },
