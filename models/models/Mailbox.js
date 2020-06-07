@@ -27,7 +27,11 @@ Mailbox.init(
 
 exports.add = async (userKey, msgId) => {
   const [box, user, msg] = await Promise.all([
-    Mailbox.create({ id: Util.uuid(), disable: false, picked: false }),
+    Mailbox.create({
+      id: Util.uuid(),
+      disable: false,
+      picked: false,
+    }),
     User.model.findOne({ where: { token: userKey } }),
     Article.model.findOne({ where: { code: msgId } }),
   ]);
@@ -68,5 +72,27 @@ exports.disable = (id) => {
     }
   );
 };
+
+// // 暂时用不到
+// exports.picked = async (id, times) => {
+//   const theMailBox = await Mailbox.findOne({
+//     where: { id },
+//   });
+
+//   if (theMailBox.dataValues.maxTimes <= theMailBox.dataValues.currentTimes) {
+//     return {
+//       success: false,
+//       ret: config.emptyTip || "亲，已经被提取完啦",
+//     };
+//   } else {
+//     await theMailBox.update({
+//       currentTimes: theMailBox.dataValues.currentTimes + 1,
+//     });
+//     return {
+//       success: false,
+//       ret: config.successTip || "提取成功啦",
+//     };
+//   }
+// };
 
 exports.model = Mailbox;

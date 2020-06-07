@@ -9,6 +9,7 @@ var config = {
   AppId: "wx04062e3334ae342a",
   AppSecret: "23c5d0cc3d56dab1e9cb30ee2b487d12",
   ToastText: "天干物燥",
-}
+  maxTimes: 1,
+};
 
-module.exports = config
+module.exports = config;

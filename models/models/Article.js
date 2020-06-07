@@ -1,5 +1,6 @@
 const path = require("path");
 const sequelize = require(path.resolve(__dirname, "./db"));
+const config = require("../../config");
 
 const User = require("./User");
 
@@ -31,6 +32,11 @@ Article.init(
     backCover: Sequelize.STRING(),
     // 动态类型[AIM定向,NORMAL普通,RANDOM随机]
     type: Sequelize.STRING(),
+    currentTimes: { type: Sequelize.INTEGER(), defaultValue: 0 },
+    maxTimes: {
+      type: Sequelize.INTEGER(),
+      defaultValue: config.maxTimes === undefined ? 1 : config.maxTimes,
+    },
   },
   { sequelize, modelName: "Article" }
 );
@@ -145,6 +151,18 @@ exports.setBackCover = (id, src) => {
   return Article.update(
     {
       backCover: src,
+    },
+    {
+      where: { id },
+    }
+  );
+};
+
+exports.setMaxTimes = (id, times) => {
+  console.log(id, times);
+  return Article.update(
+    {
+      maxTimes: times,
     },
     {
       where: { id },

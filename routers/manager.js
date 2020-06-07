@@ -59,7 +59,12 @@ router.post("/activity/set_checked", async (req, res) => {
   const data =
     ((await Article.model.findOne({ where: { id: req.body.id } })) || {})
       .dataValues || {};
-  if (data.lat !== null && data.lng !== null) {
+  if (
+    data.lat !== null &&
+    data.lng !== null &&
+    data.checkedImg !== null &&
+    data.backCover !== null
+  ) {
     await Article.check(req.body.id);
   }
 
@@ -72,6 +77,18 @@ router.post("/activity/set_checked", async (req, res) => {
 router.post("/activity/setBackCover", async (req, res) => {
   try {
     await Article.setBackCover(req.body.id, req.body.url);
+
+    const data =
+      ((await Article.model.findOne({ where: { id: req.body.id } })) || {})
+        .dataValues || {};
+    if (
+      data.lat !== null &&
+      data.lng !== null &&
+      data.checkedImg !== null &&
+      data.backCover !== null
+    ) {
+      await Article.check(req.body.id);
+    }
     res.json({
       success: true,
     });
@@ -119,6 +136,19 @@ router.post("/activity/recover", async (req, res) => {
         where: { id: req.body.id },
       }
     );
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+    });
+  }
+});
+
+router.post("/activity/set_maxTimes", async (req, res) => {
+  try {
+    await Article.setMaxTimes(req.body.id, req.body.times);
     res.json({
       success: true,
     });
