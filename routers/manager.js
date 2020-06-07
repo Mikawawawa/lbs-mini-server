@@ -159,4 +159,20 @@ router.post("/activity/set_maxTimes", async (req, res) => {
   }
 });
 
+router.post("/activity/search", async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      data: {
+        activities: (await Article.like(req.body.content)) || [],
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+    });
+  }
+});
+
 module.exports = router;

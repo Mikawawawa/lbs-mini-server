@@ -174,4 +174,55 @@ exports.relocate = (id, lat, lng) => {
   return Article.update({ lat, lng }, { where: { id } });
 };
 
+exports.like = async (content) => {
+  const asRaw = await Article.findAll({
+    where: {
+      raw: { [Sequelize.Op.like]: "%" + content + "%" },
+    },
+  });
+  const asNickName = (
+    (await Promise.all(
+      (
+        await User.model.findAll({
+          where: { nickname: { [Sequelize.Op.like]: "%" + content + "%" } },
+        })
+      ).map(async (item) => item.getArticles())
+    )) || []
+  ).reduce((prev, item) => [...prev, ...item], []);
+
+  const data = asNickName.reduce(
+    (prev, item) => {
+      // console.log(item);
+      if (Object.keys(prev).indexOf(item.dataValues.id) >= 0) {
+        return prev;
+      } else {
+        return {
+          ...prev,
+          [item.dataValues.id]: item,
+        };
+      }
+    },
+    (asRaw || []).reduce((prev, item) => {
+      return {
+        ...prev,
+        [item.dataValues.id]: item,
+      };
+    }, {})
+  );
+
+  return await Promise.all(
+    Object.values(data).map(async (item) => {
+      return {
+        ...item.dataValues,
+        nickname:
+          (
+            (await User.model.findOne({
+              where: { uuid: item.dataValues.UserUuid },
+            })) || { dataValues: {} }
+          ).dataValues.nickname || "",
+      };
+    })
+  );
+};
+
 exports.model = Article;
