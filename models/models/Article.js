@@ -16,6 +16,8 @@ Article.init(
       unique: true,
     },
     raw: Sequelize.TEXT(),
+    // 主题
+    subject: { type: Sequelize.TEXT(), defaultValue: "" },
     code: Sequelize.STRING(100),
     lat: Sequelize.DOUBLE(),
     lng: Sequelize.DOUBLE(),
@@ -63,12 +65,22 @@ exports.search = (lng, lat) => {
   });
 };
 
-exports.create = async (user, raw, lat, lng, type, images, private = false) => {
+exports.create = async (
+  user,
+  raw,
+  subject,
+  lat,
+  lng,
+  type,
+  images,
+  private = false
+) => {
   console.log(type, images);
   const theUser = await User.model.findOne({ where: { token: user } });
   const code = Util.hash(raw + lat + lng + user);
   const theArticle = await Article.create({
     raw,
+    subject,
     lat,
     lng,
     type,

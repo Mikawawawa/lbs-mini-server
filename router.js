@@ -11,6 +11,7 @@ router.post("/post/write", async (req, res) => {
       const theArticle = await Article.create(
         req.body.key,
         req.body.raw,
+        req.body.subject,
         req.body.lat,
         req.body.lng,
         req.body.type,
@@ -30,6 +31,7 @@ router.post("/post/write", async (req, res) => {
         data: await Article.create(
           req.body.key,
           req.body.raw,
+          req.body.subject,
           req.body.lat,
           req.body.lng,
           req.body.type,
@@ -140,6 +142,7 @@ router.post("/mailbox/push", async (req, res) => {
     const theMessage = await Article.create(
       req.body.key,
       req.body.raw,
+      req.body.subject || "",
       req.body.lat,
       req.body.lng,
       JSON.stringify(req.body.images),
