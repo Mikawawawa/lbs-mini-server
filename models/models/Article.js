@@ -21,6 +21,8 @@ Article.init(
     code: Sequelize.STRING(100),
     lat: Sequelize.DOUBLE(),
     lng: Sequelize.DOUBLE(),
+    // 用户上传音频地址
+    audio: Sequelize.TEXT(),
     // 用户上传图片
     images: Sequelize.TEXT(),
     // 是否已删除
@@ -73,6 +75,7 @@ exports.create = async (
   lng,
   type,
   images,
+  audio,
   private = false
 ) => {
   console.log(type, images);
@@ -80,11 +83,12 @@ exports.create = async (
   const code = Util.hash(raw + lat + lng + user);
   const theArticle = await Article.create({
     raw,
-    subject,
+    subject: subject === undefined ? raw.slice(0, 15) : subject,
     lat,
     lng,
     type,
     images,
+    audio,
     code,
     dele: false,
     checked: false,

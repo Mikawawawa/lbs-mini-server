@@ -8,6 +8,7 @@ module.exports = {
     "https://admin.theohan.club",
     "http://share.theohan.club",
     "http://admin.theohan.club",
+    "https://servicewechat.com",
     /\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3}/,
     /\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3}:8080/,
     /\d{0,3}.\d{0,3}.\d{0,3}.\d{0,3}:3000/,

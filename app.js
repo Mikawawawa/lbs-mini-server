@@ -16,7 +16,7 @@ const app = express();
 const config = require("./config");
 app.use(compression());
 app.use(cors(require("./cors.js")));
-app.set("trust proxy", 2); // trust first proxy
+app.set("trust proxy", 4); // trust first proxy
 
 app.use(logger("tiny"));
 app.use(
@@ -43,7 +43,11 @@ app.use(express.urlencoded({ extended: false }));
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./public/images/");
+    if (file.mimetype.indexOf("audio") >= 0) {
+      cb(null, "./public/records/");
+    } else {
+      cb(null, "./public/images/");
+    }
   },
   filename: function (req, file, cb) {
     console.log();
@@ -53,7 +57,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.post("/upload", upload.single("images"), (req, res) => {
+app.post("/upload", upload.single("files"), (req, res) => {
   console.log("req body", req.body);
   console.log("req file", req.file);
   // if (req.file.fieldname) {
@@ -61,10 +65,18 @@ app.post("/upload", upload.single("images"), (req, res) => {
   // } else {
   //   res.json({ success: false });
   // }
-  res.json({
-    success: true,
-    data: [{ url: `${config.bind}/images/${req.file.filename}` }],
-  });
+  if (req.file.mimetype.indexOf("audio") >= 0) {
+    console.log("here");
+    res.json({
+      success: true,
+      url: `${config.bind}/records/${req.file.filename}`,
+    });
+  } else {
+    res.json({
+      success: true,
+      data: [{ url: `${config.bind}/images/${req.file.filename}` }],
+    });
+  }
 });
 
 app.use("/", indexRouter);

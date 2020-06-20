@@ -16,6 +16,7 @@ router.post("/post/write", async (req, res) => {
         req.body.lng,
         req.body.type,
         JSON.stringify(req.body.images),
+        req.body.audio,
         true
       );
       res.json({
@@ -35,7 +36,8 @@ router.post("/post/write", async (req, res) => {
           req.body.lat,
           req.body.lng,
           req.body.type,
-          JSON.stringify(req.body.images)
+          JSON.stringify(req.body.images),
+          req.body.audio
         ),
       });
     }
@@ -142,10 +144,11 @@ router.post("/mailbox/push", async (req, res) => {
     const theMessage = await Article.create(
       req.body.key,
       req.body.raw,
-      req.body.subject || "",
+      req.body.subject || req.body.raw.slice(0, 15),
       req.body.lat,
       req.body.lng,
       JSON.stringify(req.body.images),
+      req.body.audio,
       true
     );
 
