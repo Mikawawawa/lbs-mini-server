@@ -1,6 +1,6 @@
 var config = {
-  // bind: "https://wechat.theohan.club",
-  bind: "http://localhost:8080",
+  bind: "https://wechat.theohan.club",
+  // bind: "http://localhost:8080",
   dialect: "mysql",
   database: "lbsmini",
   username: "app_user",
