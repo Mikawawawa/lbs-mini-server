@@ -213,7 +213,8 @@ router.get("/randomGet", async (req, res) => {
 
   let data = optionArt[parseInt(Math.random()*optionArt.length)]
   res.json({
-    data
+    checkedImg: data.checkedImg,
+    backCover: data.backCover
   })
 });
 
