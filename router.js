@@ -201,4 +201,20 @@ router.get("/share", async (req, res) => {
   }
 });
 
+/* 随机获取 */
+router.get("/randomGet", async (req, res) => {
+  const Articles = await Article.list();
+  const optionArt = [];
+  Articles.forEach(e => {
+    if(e.checkedImg && e.backCover){
+      optionArt.push(e)
+    }
+  });
+
+  let data = optionArt[parseInt(Math.random()*optionArt.length)]
+  res.json({
+    data
+  })
+});
+
 module.exports = router;
